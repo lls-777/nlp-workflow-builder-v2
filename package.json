@@ -1,0 +1,15 @@
+{
+  "name": "project-nlp-hybrid",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "test": "npm test --workspaces --if-present",
+    "build": "npm run build --workspace apps/web"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

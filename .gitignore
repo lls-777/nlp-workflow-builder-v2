@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Node
+node_modules/
+.next/
+out/
+dist/
+coverage/
+
+# Env files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# System
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+logs/
+*.log
+
+# Database and runtime data
+*.db
+*.sqlite
+*.sqlite3
+data/app.db
+data/uploads/
+data/artifacts/
+
+# Cache
+.cache/
