@@ -1,0 +1,1 @@
+Customer feedback shows that users value clear setup instructions. The first release should keep the workflow simple and visible. Each supported capability must execute real code rather than return an unsupported promise. The offline demo reads this file and produces a stable summary.

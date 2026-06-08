@@ -1,0 +1,199 @@
+{
+  "id": "acceptance_data_analysis",
+  "version": 1,
+  "goal": "Analyze completed sales by region and provide business insights",
+  "source_policy": "uploaded_files_only",
+  "workflow_inputs": [
+    {
+      "name": "source_file",
+      "value_type": "file",
+      "required": true
+    }
+  ],
+  "steps": [
+    {
+      "id": "read_sales_table",
+      "step_type": "read_table",
+      "inputs": [
+        {
+          "name": "file",
+          "bindings": [
+            {
+              "source": "workflow_input",
+              "input_name": "source_file"
+            }
+          ]
+        }
+      ],
+      "params": {},
+      "title": "Read the uploaded sales table"
+    },
+    {
+      "id": "profile_sales_table",
+      "step_type": "profile_table",
+      "inputs": [
+        {
+          "name": "table",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "read_sales_table",
+              "output_name": "table"
+            }
+          ]
+        }
+      ],
+      "params": {},
+      "title": "Inspect the sales table fields"
+    },
+    {
+      "id": "filter_completed_sales",
+      "step_type": "filter_table",
+      "inputs": [
+        {
+          "name": "table",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "read_sales_table",
+              "output_name": "table"
+            }
+          ]
+        }
+      ],
+      "params": {
+        "filters": [
+          {
+            "field": "status",
+            "operator": "eq",
+            "value": "completed"
+          }
+        ]
+      },
+      "title": "Keep completed sales"
+    },
+    {
+      "id": "aggregate_sales_by_region",
+      "step_type": "aggregate_table",
+      "inputs": [
+        {
+          "name": "table",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "filter_completed_sales",
+              "output_name": "table"
+            }
+          ]
+        }
+      ],
+      "params": {
+        "group_by": [
+          "region"
+        ],
+        "aggregations": [
+          {
+            "field": "sales_amount",
+            "operation": "sum",
+            "alias": "total_sales"
+          }
+        ]
+      },
+      "title": "Calculate sales totals by region"
+    },
+    {
+      "id": "sort_sales_totals",
+      "step_type": "sort_table",
+      "inputs": [
+        {
+          "name": "table",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "aggregate_sales_by_region",
+              "output_name": "table"
+            }
+          ]
+        }
+      ],
+      "params": {
+        "sort_by": [
+          {
+            "field": "total_sales",
+            "ascending": false
+          }
+        ]
+      },
+      "title": "Rank regions by sales"
+    },
+    {
+      "id": "build_sales_chart",
+      "step_type": "render_chart",
+      "inputs": [
+        {
+          "name": "table",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "sort_sales_totals",
+              "output_name": "table"
+            }
+          ]
+        }
+      ],
+      "params": {
+        "chart_type": "bar",
+        "x": "region",
+        "y": "total_sales",
+        "title": "Completed sales by region"
+      },
+      "title": "Prepare the sales chart"
+    },
+    {
+      "id": "generate_sales_insights",
+      "step_type": "generate_text",
+      "inputs": [
+        {
+          "name": "materials",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "profile_sales_table",
+              "output_name": "table_profile"
+            },
+            {
+              "source": "step_output",
+              "step_id": "sort_sales_totals",
+              "output_name": "table"
+            }
+          ]
+        }
+      ],
+      "params": {
+        "task": "business_insights",
+        "bullet_count": 3
+      },
+      "title": "Generate business insights"
+    }
+  ],
+  "result_bindings": [
+    {
+      "step_id": "sort_sales_totals",
+      "output_name": "table",
+      "label": "Regional sales ranking",
+      "display_type": "table"
+    },
+    {
+      "step_id": "build_sales_chart",
+      "output_name": "chart",
+      "label": "Regional sales chart",
+      "display_type": "chart"
+    },
+    {
+      "step_id": "generate_sales_insights",
+      "output_name": "text",
+      "label": "Business insights",
+      "display_type": "text"
+    }
+  ]
+}

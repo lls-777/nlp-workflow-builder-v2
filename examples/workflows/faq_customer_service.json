@@ -1,0 +1,130 @@
+{
+  "id": "acceptance_faq_customer_service",
+  "version": 1,
+  "goal": "Answer a customer question from the uploaded FAQ files and show supporting excerpts",
+  "source_policy": "uploaded_files_only",
+  "workflow_inputs": [
+    {
+      "name": "source_files",
+      "value_type": "files",
+      "required": true
+    },
+    {
+      "name": "question",
+      "value_type": "text",
+      "required": true
+    }
+  ],
+  "steps": [
+    {
+      "id": "read_faq_files",
+      "step_type": "read_document",
+      "inputs": [
+        {
+          "name": "files",
+          "bindings": [
+            {
+              "source": "workflow_input",
+              "input_name": "source_files"
+            }
+          ]
+        }
+      ],
+      "params": {},
+      "title": "Read the uploaded FAQ files"
+    },
+    {
+      "id": "chunk_faq_files",
+      "step_type": "chunk_document",
+      "inputs": [
+        {
+          "name": "documents",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "read_faq_files",
+              "output_name": "documents"
+            }
+          ]
+        }
+      ],
+      "params": {
+        "chunk_size": 800,
+        "overlap": 120
+      },
+      "title": "Split the FAQ files into searchable excerpts"
+    },
+    {
+      "id": "retrieve_faq_chunks",
+      "step_type": "retrieve_chunks",
+      "inputs": [
+        {
+          "name": "chunks",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "chunk_faq_files",
+              "output_name": "chunks"
+            }
+          ]
+        },
+        {
+          "name": "query",
+          "bindings": [
+            {
+              "source": "workflow_input",
+              "input_name": "question"
+            }
+          ]
+        }
+      ],
+      "params": {
+        "top_k": 5
+      },
+      "title": "Find relevant FAQ excerpts"
+    },
+    {
+      "id": "answer_faq_question",
+      "step_type": "answer_with_sources",
+      "inputs": [
+        {
+          "name": "retrieved_chunks",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "retrieve_faq_chunks",
+              "output_name": "retrieved_chunks"
+            }
+          ]
+        },
+        {
+          "name": "question",
+          "bindings": [
+            {
+              "source": "workflow_input",
+              "input_name": "question"
+            }
+          ]
+        }
+      ],
+      "params": {
+        "min_score": 0.35
+      },
+      "title": "Answer with FAQ excerpts"
+    }
+  ],
+  "result_bindings": [
+    {
+      "step_id": "answer_faq_question",
+      "output_name": "text",
+      "label": "Customer answer",
+      "display_type": "text"
+    },
+    {
+      "step_id": "answer_faq_question",
+      "output_name": "citations",
+      "label": "FAQ excerpts",
+      "display_type": "citations"
+    }
+  ]
+}

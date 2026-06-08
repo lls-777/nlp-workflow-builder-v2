@@ -1,0 +1,130 @@
+{
+  "id": "acceptance_document_qa",
+  "version": 1,
+  "goal": "Answer a question using only the uploaded files and show supporting excerpts",
+  "source_policy": "uploaded_files_only",
+  "workflow_inputs": [
+    {
+      "name": "source_files",
+      "value_type": "files",
+      "required": true
+    },
+    {
+      "name": "question",
+      "value_type": "text",
+      "required": true
+    }
+  ],
+  "steps": [
+    {
+      "id": "read_qa_files",
+      "step_type": "read_document",
+      "inputs": [
+        {
+          "name": "files",
+          "bindings": [
+            {
+              "source": "workflow_input",
+              "input_name": "source_files"
+            }
+          ]
+        }
+      ],
+      "params": {},
+      "title": "Read the uploaded files"
+    },
+    {
+      "id": "chunk_qa_files",
+      "step_type": "chunk_document",
+      "inputs": [
+        {
+          "name": "documents",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "read_qa_files",
+              "output_name": "documents"
+            }
+          ]
+        }
+      ],
+      "params": {
+        "chunk_size": 800,
+        "overlap": 120
+      },
+      "title": "Split the files into searchable excerpts"
+    },
+    {
+      "id": "retrieve_qa_chunks",
+      "step_type": "retrieve_chunks",
+      "inputs": [
+        {
+          "name": "chunks",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "chunk_qa_files",
+              "output_name": "chunks"
+            }
+          ]
+        },
+        {
+          "name": "query",
+          "bindings": [
+            {
+              "source": "workflow_input",
+              "input_name": "question"
+            }
+          ]
+        }
+      ],
+      "params": {
+        "top_k": 5
+      },
+      "title": "Find relevant excerpts"
+    },
+    {
+      "id": "answer_qa_question",
+      "step_type": "answer_with_sources",
+      "inputs": [
+        {
+          "name": "retrieved_chunks",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "retrieve_qa_chunks",
+              "output_name": "retrieved_chunks"
+            }
+          ]
+        },
+        {
+          "name": "question",
+          "bindings": [
+            {
+              "source": "workflow_input",
+              "input_name": "question"
+            }
+          ]
+        }
+      ],
+      "params": {
+        "min_score": 0.35
+      },
+      "title": "Answer with supporting excerpts"
+    }
+  ],
+  "result_bindings": [
+    {
+      "step_id": "answer_qa_question",
+      "output_name": "text",
+      "label": "Answer",
+      "display_type": "text"
+    },
+    {
+      "step_id": "answer_qa_question",
+      "output_name": "citations",
+      "label": "Supporting excerpts",
+      "display_type": "citations"
+    }
+  ]
+}

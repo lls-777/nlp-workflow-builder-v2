@@ -1,0 +1,9 @@
+order_id,region,status,sales_amount,product
+1001,North,completed,1200,Starter
+1002,South,completed,900,Premium
+1003,North,pending,300,Starter
+1004,East,completed,1500,Premium
+1005,South,completed,700,Starter
+1006,West,cancelled,450,Premium
+1007,East,completed,500,Starter
+1008,North,completed,800,Premium

@@ -1,0 +1,61 @@
+{
+  "id": "acceptance_one_time_report",
+  "version": 1,
+  "goal": "Generate one report immediately from uploaded files",
+  "source_policy": "uploaded_files_only",
+  "workflow_inputs": [
+    {
+      "name": "source_files",
+      "value_type": "files",
+      "required": true
+    }
+  ],
+  "steps": [
+    {
+      "id": "read_report_files",
+      "step_type": "read_document",
+      "inputs": [
+        {
+          "name": "files",
+          "bindings": [
+            {
+              "source": "workflow_input",
+              "input_name": "source_files"
+            }
+          ]
+        }
+      ],
+      "params": {},
+      "title": "Read the uploaded report files"
+    },
+    {
+      "id": "generate_one_time_report",
+      "step_type": "generate_text",
+      "inputs": [
+        {
+          "name": "materials",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "read_report_files",
+              "output_name": "documents"
+            }
+          ]
+        }
+      ],
+      "params": {
+        "task": "report",
+        "bullet_count": 5
+      },
+      "title": "Generate one report immediately"
+    }
+  ],
+  "result_bindings": [
+    {
+      "step_id": "generate_one_time_report",
+      "output_name": "text",
+      "label": "Immediate report",
+      "display_type": "text"
+    }
+  ]
+}

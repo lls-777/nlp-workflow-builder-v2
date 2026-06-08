@@ -1,0 +1,61 @@
+{
+  "id": "demo_summary_workflow",
+  "version": 1,
+  "goal": "Generate a short offline summary and three key points",
+  "source_policy": "uploaded_files_only",
+  "workflow_inputs": [
+    {
+      "name": "source_files",
+      "value_type": "files",
+      "required": true
+    }
+  ],
+  "steps": [
+    {
+      "id": "read_1",
+      "step_type": "read_document",
+      "inputs": [
+        {
+          "name": "files",
+          "bindings": [
+            {
+              "source": "workflow_input",
+              "input_name": "source_files"
+            }
+          ]
+        }
+      ],
+      "params": {},
+      "title": "Read the uploaded document"
+    },
+    {
+      "id": "generate_1",
+      "step_type": "generate_text",
+      "inputs": [
+        {
+          "name": "materials",
+          "bindings": [
+            {
+              "source": "step_output",
+              "step_id": "read_1",
+              "output_name": "documents"
+            }
+          ]
+        }
+      ],
+      "params": {
+        "task": "summary",
+        "bullet_count": 3
+      },
+      "title": "Generate the offline summary"
+    }
+  ],
+  "result_bindings": [
+    {
+      "step_id": "generate_1",
+      "output_name": "text",
+      "label": "Offline summary",
+      "display_type": "text"
+    }
+  ]
+}
