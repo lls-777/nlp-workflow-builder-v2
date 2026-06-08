@@ -1,0 +1,184 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f6f7fb;
+  color: #172033;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.shell {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 32px 20px 56px;
+}
+
+.header {
+  margin-bottom: 24px;
+}
+
+.header h1 {
+  margin: 0 0 8px;
+  font-size: 32px;
+  line-height: 1.25;
+}
+
+.header p {
+  margin: 0;
+  color: #5b6578;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) 1fr;
+  gap: 20px;
+}
+
+.panel {
+  background: #ffffff;
+  border: 1px solid #e5e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(31, 45, 70, 0.06);
+}
+
+.panel + .panel {
+  margin-top: 16px;
+}
+
+.panel h2,
+.panel h3 {
+  margin: 0 0 12px;
+}
+
+.muted {
+  color: #697386;
+  font-size: 14px;
+}
+
+textarea,
+input[type="text"] {
+  width: 100%;
+  border: 1px solid #cad0dc;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+button {
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 14px;
+  background: #1f6feb;
+  color: #fff;
+  cursor: pointer;
+}
+
+button.secondary {
+  background: #eef2f7;
+  color: #172033;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.notice {
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff7e6;
+  border: 1px solid #f0d59d;
+  color: #6b4d00;
+  margin: 12px 0;
+}
+
+.error {
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff0f0;
+  border: 1px solid #f1b4b4;
+  color: #8a1f1f;
+  margin: 12px 0;
+}
+
+.success {
+  border-radius: 12px;
+  padding: 12px;
+  background: #eefaf2;
+  border: 1px solid #bde5c8;
+  color: #176332;
+  margin: 12px 0;
+}
+
+.file-list {
+  padding-left: 18px;
+}
+
+.output-card {
+  border-top: 1px solid #edf0f5;
+  padding-top: 14px;
+  margin-top: 14px;
+}
+
+.text-output {
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th,
+td {
+  border-bottom: 1px solid #edf0f5;
+  padding: 8px;
+  text-align: left;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: 130px 1fr 80px;
+  gap: 10px;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.bar {
+  height: 14px;
+  border-radius: 999px;
+  background: #1f6feb;
+}
+
+.details {
+  margin-top: 16px;
+}
+
+@media (max-width: 820px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
